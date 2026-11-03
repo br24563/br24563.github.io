@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brendan Ryan, optical engineering</title>
+<meta name="description" content="Brendan Ryan is an optical engineering student at the University of Rochester and an optical systems intern at Optimax Systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F6F2;
+  --ink:#17202A;
+  --muted:#58636E;
+  --rule:#D6DAD3;
+  --fringe:#C2352A;
+  --glass:#2C6A6F;
+  --glass-fill:#DCE8E6;
+  --glass-fill-2:#C9DAD8;
+  --serif:"Spectral",Georgia,serif;
+  --sans:"Instrument Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.125rem;line-height:1.6}
+a{color:var(--glass);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--ink)}
+a:focus-visible{outline:2px solid var(--fringe);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;padding:88px 0 72px;border-bottom:1px solid var(--rule)}
+h1{font-weight:600;font-size:clamp(3rem,7vw,5.25rem);line-height:.98;letter-spacing:-.02em;margin:0 0 28px}
+.lede{font-size:1.3rem;line-height:1.5;max-width:30ch;margin:0 0 32px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;font-family:var(--sans);font-size:.95rem;font-weight:500}
+.btn{display:inline-block;padding:10px 18px;border:1.5px solid var(--ink);border-radius:999px;color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:hover{background:var(--glass);border-color:var(--glass);color:#fff}
+.fringes{margin:0}
+.fringes canvas{display:block;width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 10px #E7E9E3,0 0 0 11px var(--rule)}
+.fringes figcaption{font-family:var(--sans);font-size:.82rem;line-height:1.45;color:var(--muted);margin-top:26px;max-width:36ch}
+
+/* Sections */
+section{padding:64px 0;border-bottom:1px solid var(--rule)}
+h2{font-weight:500;font-size:2rem;letter-spacing:-.01em;margin:0 0 28px}
+.about p{max-width:62ch;margin:0 0 1em}
+
+.project{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:44px;padding:36px 0;border-top:1px solid var(--rule)}
+.project:first-of-type{border-top:0;padding-top:0}
+.project h3{font-weight:600;font-size:1.6rem;margin:0}
+.project .kind{font-style:italic;color:var(--muted);margin:2px 0 14px}
+.project p{margin:0 0 14px;max-width:52ch}
+.project .meta{font-family:var(--sans);font-size:.92rem;font-weight:500}
+.project figure{margin:0}
+.project figure img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:6px;background:#fff}
+.project figure svg{display:block;width:100%;height:auto}
+.project figcaption{font-family:var(--sans);font-size:.82rem;color:var(--muted);margin-top:10px}
+.project.text-only{grid-template-columns:minmax(0,1fr)}
+.glass1{fill:var(--glass-fill);stroke:var(--glass);stroke-width:1}
+.glass2{fill:var(--glass-fill-2);stroke:var(--glass);stroke-width:1}
+.ray{fill:none;stroke-width:1.4}
+.axis{stroke:var(--muted);stroke-width:.6;stroke-dasharray:6 4}
+.img{stroke:var(--ink);stroke-width:1.2}
+
+.roles{margin:0;padding:0;list-style:none}
+.roles li{display:grid;grid-template-columns:1fr auto;gap:4px 24px;padding:16px 0;border-top:1px solid var(--rule)}
+.roles li:first-child{border-top:0;padding-top:0}
+.roles .role{font-weight:600}
+.roles .org{color:var(--muted)}
+.roles .when{font-family:var(--sans);font-size:.92rem;color:var(--muted);white-space:nowrap;grid-row:1/3;grid-column:2;align-self:start;padding-top:3px}
+
+.readout{display:block;margin-top:8px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.readout.nulled{color:var(--glass)}
+.fringes canvas{cursor:crosshair;touch-action:none}
+.fringes canvas:focus-visible{outline:2px solid var(--fringe);outline-offset:14px}
+.ray.faint{opacity:.25}
+.rt-controls{display:flex;align-items:center;gap:16px;margin:14px 0 18px;font-family:var(--sans);font-size:.92rem}
+.rt-controls label{white-space:nowrap;font-weight:500}
+.rt-controls output{display:inline-block;min-width:3.2em;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rt-controls input{flex:1;accent-color:var(--glass);min-width:0}
+.rt-spot{display:flex;gap:18px;align-items:center}
+.project .rt-spot svg{width:150px;height:150px;flex:none}
+.rt-spot p{font-family:var(--sans);font-size:.85rem;color:var(--ink);margin:0;line-height:1.7}
+.rt-spot .key{color:var(--muted);display:flex;flex-wrap:wrap;gap:0 12px}
+.rt-spot .key>span{white-space:nowrap}
+.rt-spot .key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.spotbox{fill:#fff;stroke:var(--rule)}
+.cross{stroke:var(--rule);stroke-width:1}
+.bar{stroke:var(--ink);stroke-width:1.5}
+.bartxt{font-family:var(--sans);font-size:11px;fill:var(--muted)}
+footer{padding:48px 0 64px;font-family:var(--sans);font-size:.95rem;color:var(--muted)}
+footer .contact{display:flex;flex-wrap:wrap;gap:8px 28px;margin-bottom:14px}
+footer .contact a{color:var(--ink);font-weight:500}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;gap:40px;padding:56px 0 48px}
+  .fringes{max-width:280px}
+  .project{grid-template-columns:1fr;gap:20px}
+  .roles li{grid-template-columns:1fr}
+  .roles .when{grid-row:auto;grid-column:auto;padding-top:0}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  body{font-size:1.06rem}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>Brendan Ryan</h1>
+      <p class="lede">Optical engineering student at the University of Rochester. Optical systems intern at Optimax Systems.</p>
+      <div class="actions">
+        <a class="btn primary" href="Brendan_Ryan_Resume.pdf">Download resume (PDF)</a>
+        <a class="btn" href="mailto:brendan@moosepass.com">Email me</a>
+        <a class="btn" href="https://github.com/br24563">GitHub</a>
+      </div>
+    </div>
+    <figure class="fringes">
+      <canvas id="fringes" aria-label="Simulated interferogram. Move the pointer, drag, or use arrow keys to change tilt." role="img"></canvas>
+      <figcaption>A simulated Fizeau interferogram. Move your cursor to the center of the disc (or drag on it) to null the tilt, the way you align a part on the interferometer.<span id="fringe-readout" class="readout" aria-live="polite"></span></figcaption>
+    </figure>
+  </header>
+
+  <section class="about" aria-labelledby="about-h">
+    <h2 id="about-h">About</h2>
+    <p>I'm working toward a B.S. in Optical Engineering at the University of Rochester, expected May 2028. At Optimax I assemble and align precision optical systems in an ISO 5 cleanroom, verify them with transmitted wavefront interferometry and encircled energy measurements, and design tooling in SolidWorks.</p>
+    <p>Outside of work I build open-source tools for optical design and glass selection. I also work with Rochester's varsity baseball team on Trackman and video analysis, after pitching for the team for two seasons.</p>
+  </section>
+
+  <section aria-labelledby="projects-h">
+    <h2 id="projects-h">Projects</h2>
+
+    <article class="project">
+      <div>
+        <h3>Kestrova</h3>
+        <p class="kind">Optical design and analysis software</p>
+        <p>A free, local optical design program in the spirit of Zemax and CODE V. You enter a lens prescription surface by surface; it traces real rays, computes Seidel aberrations, wavefront error and MTF, and runs tolerancing with compensators and Monte Carlo yield estimates.</p>
+        <p class="meta">In progress, version 0.3. <a href="https://github.com/br24563/Kestrova">Code on GitHub</a></p>
+      </div>
+      <figure class="rt">
+        <svg id="rt-side" role="img" aria-label="Side view of rays traced through a cemented achromatic doublet to the image plane"></svg>
+        <div class="rt-controls">
+          <label for="rt-field">Field angle <output id="rt-field-val">0.0°</output></label>
+          <input id="rt-field" type="range" min="0" max="5" step="0.1" value="0">
+        </div>
+        <div class="rt-spot">
+          <svg id="rt-spot" viewBox="0 0 200 200" role="img" aria-label="Spot diagram at the image plane in F, d and C light"></svg>
+          <p><span id="rt-rms"></span><br><span class="key"><span><i style="background:#3B6E8F"></i>F 486 nm</span> <span><i style="background:#5E7A2E"></i>d 588 nm</span> <span><i style="background:#B23A2E"></i>C 656 nm</span></span></p>
+        </div>
+        <figcaption>An exact 3D ray trace of a 100 mm cemented achromat (N-BK7 and SF5), running in your browser. Slide off-axis and watch the spot grow at the fixed focal plane.</figcaption>
+      </figure>
+    </article>
+
+    <article class="project">
+      <div>
+        <h3>GlassMatch</h3>
+        <p class="kind">Optical glass selection database</p>
+        <p>About 2,900 optical materials from 18 sources in one searchable database. Search by index, Abbe number, transmission band and thermal expansion, find equivalent glasses across SCHOTT, OHARA, HOYA, CDGM and other makers, and trace every value back to its source.</p>
+        <p class="meta">In progress, open source. <a href="https://github.com/br24563/Glass-Match">Code on GitHub</a></p>
+      </div>
+      <figure>
+        <img src="assets/glassmatch-matching.webp" width="1110" height="695" loading="lazy" alt="GlassMatch matching page: requirement filters for wavelength band, index range and Abbe number range, with a ranked table of matching glasses from several manufacturers.">
+        <figcaption>Matching glasses against a visible-band requirement.</figcaption>
+      </figure>
+    </article>
+
+    <article class="project text-only">
+      <div>
+        <h3>Telecentric stereo microscope</h3>
+        <p class="kind">Geometrical Optics course, University of Rochester, fall 2025</p>
+        <p>A first-order design of a telecentric stereo microscope for art conservation. I balanced magnification, working distance, resolution and size, then turned the first-order layout into a buildable configuration using catalog optics.</p>
+      </div>
+    </article>
+  </section>
+
+  <section aria-labelledby="exp-h">
+    <h2 id="exp-h">Experience</h2>
+    <ul class="roles">
+      <li><span class="role">Optical Systems Intern</span><span class="org">Optimax Systems, Ontario, NY</span><span class="when">Aug 2026 – present</span></li>
+      <li><span class="role">Analytics Assistant, Varsity Baseball</span><span class="org">University of Rochester</span><span class="when">Oct 2026 – present</span></li>
+      <li><span class="role">Independent Study Researcher</span><span class="org">University of Rochester, Prof. Gerald Gamm</span><span class="when">Sep 2025 – present</span></li>
+      <li><span class="role">Systems Test Engineer Intern</span><span class="org">Stealth AI startup, Bellevue, WA</span><span class="when">Jun – Jul 2026</span></li>
+      <li><span class="role">Pitcher, Varsity Baseball (NCAA Division III)</span><span class="org">University of Rochester</span><span class="when">Aug 2024 – Oct 2026</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="contact">
+      <a href="mailto:brendan@moosepass.com">brendan@moosepass.com</a>
+      <a href="https://github.com/br24563">github.com/br24563</a>
+      <a href="Brendan_Ryan_Resume.pdf">Resume (PDF)</a>
+    </div>
+    <p>Rochester, NY</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var c=document.getElementById('fringes'); if(!c||!c.getContext) return;
+  var hero=document.querySelector('.hero');
+  var out=document.getElementById('fringe-readout');
+  var ctx=c.getContext('2d'), N=0, img, phase=0, last=0, running=false;
+  var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dark=[24,30,38], lite=[226,74,58];
+  var POWER=0.6, ASTIG=0.15, MAXT=4.5;           /* waves */
+  var idle={x:2.4,y:0.8}, tilt={x:idle.x,y:idle.y}, target={x:idle.x,y:idle.y};
+  var dirty=true, nulledShown=false;
+
+  function size(){
+    var s=Math.round(c.getBoundingClientRect().width*Math.min(window.devicePixelRatio||1,2));
+    if(s<2||s===N) return; N=s; c.width=c.height=N; img=ctx.createImageData(N,N); dirty=true; draw();
+  }
+  function draw(){
+    if(!img) return;
+    var d=img.data, h=N/2, i=0, tx=tilt.x, ty=tilt.y;
+    for(var y=0;y<N;y++){
+      var py=(y-h)/h;
+      for(var x=0;x<N;x++,i+=4){
+        var px=(x-h)/h, r2=px*px+py*py;
+        if(r2>1){d[i+3]=0;continue;}
+        var w=tx*px+ty*py+POWER*r2+ASTIG*(px*px-py*py);
+        var I=0.5+0.5*Math.cos(6.2832*w+phase);
+        var edge=r2>0.985?(1-r2)/0.015:1;
+        d[i]=dark[0]+(lite[0]-dark[0])*I; d[i+1]=dark[1]+(lite[1]-dark[1])*I; d[i+2]=dark[2]+(lite[2]-dark[2])*I; d[i+3]=255*edge;
+      }
+    }
+    ctx.putImageData(img,0,0);
+    readout();
+    dirty=false;
+  }
+  function readout(){
+    if(!out) return;
+    var t=Math.hypot(tilt.x,tilt.y);
+    if(t<0.12){
+      out.textContent='Tilt nulled. What’s left is 0.6 waves of power: a lens would refocus it out.';
+      out.classList.add('nulled');
+    } else {
+      out.textContent='Tilt '+t.toFixed(1)+' waves, power '+POWER.toFixed(1)+' waves';
+      out.classList.remove('nulled');
+    }
+  }
+  function aim(clientX,clientY){
+    var r=c.getBoundingClientRect(), rad=r.width/2;
+    var dx=(clientX-(r.left+rad))/rad, dy=(clientY-(r.top+rad))/rad;
+    target.x=Math.max(-MAXT,Math.min(MAXT,dx*2.2));
+    target.y=Math.max(-MAXT,Math.min(MAXT,dy*2.2));
+    kick();
+  }
+  function release(){ target.x=idle.x; target.y=idle.y; kick(); }
+
+  /* pointer: anywhere over the hero steers tilt; touch: drag on the disc */
+  hero.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse') aim(e.clientX,e.clientY); });
+  hero.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') release(); });
+  c.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'){ c.setPointerCapture(e.pointerId); aim(e.clientX,e.clientY); } });
+  c.addEventListener('pointermove',function(e){ if(e.pointerType!=='mouse' && c.hasPointerCapture(e.pointerId)) aim(e.clientX,e.clientY); });
+  c.addEventListener('pointerup',function(e){ if(e.pointerType!=='mouse') release(); });
+  c.addEventListener('pointercancel',release);
+  /* keyboard: arrows nudge tilt */
+  c.tabIndex=0;
+  c.addEventListener('keydown',function(e){
+    var k={ArrowLeft:[-.3,0],ArrowRight:[.3,0],ArrowUp:[0,-.3],ArrowDown:[0,.3]}[e.key];
+    if(!k) return; e.preventDefault();
+    target.x=Math.max(-MAXT,Math.min(MAXT,target.x+k[0])); target.y=Math.max(-MAXT,Math.min(MAXT,target.y+k[1])); kick();
+  });
+
+  var visible=true, loop=false;
+  function kick(){ if(!loop){ loop=true; requestAnimationFrame(tick); } }
+  function tick(t){
+    var moving=Math.abs(target.x-tilt.x)>0.002||Math.abs(target.y-tilt.y)>0.002;
+    if(moving){ tilt.x+=(target.x-tilt.x)*0.18; tilt.y+=(target.y-tilt.y)*0.18; dirty=true; }
+    if(!still && visible && t-last>40){ phase-=0.05; last=t; dirty=true; }
+    if(dirty) draw();
+    if(moving || (!still && visible)){ requestAnimationFrame(tick); } else { loop=false; }
+  }
+  size();
+  window.addEventListener('resize',size);
+  function setVis(v){ visible=v; if(v) kick(); }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(e){ setVis(e[0].isIntersecting && !document.hidden); }).observe(c);
+  }
+  document.addEventListener('visibilitychange',function(){ setVis(!document.hidden); });
+  kick();
+})();
+
+(function(){
+  var side=document.getElementById('rt-side'), spot=document.getElementById('rt-spot');
+  var slider=document.getElementById('rt-field'), fOut=document.getElementById('rt-field-val'), sOut=document.getElementById('rt-rms');
+  if(!side||!spot||!slider) return;
+
+  /* Cemented achromat, f = 100 mm (AC254-100-A-like). Radii, thickness after (mm); index after per wavelength. */
+  var WL={F:0,d:1,C:2};
+  var BK7=[1.52238,1.51680,1.51432], SF5=[1.68647,1.67270,1.66661], AIR=[1,1,1];
+  var S=[{R:62.8,t:4.0,n:BK7},{R:-45.7,t:2.5,n:SF5},{R:-128.2,t:0,n:AIR}];
+  var SD=12.7, EPR=10;    /* lens semi-diameter, entrance beam radius (mm) */
+
+  function trace(o,dir,w){ /* exact 3D trace; returns [points], final pos, final dir */
+    var p=o.slice(), d=dir.slice(), n=1, zv=0, pts=[p.slice()];
+    for(var i=0;i<S.length;i++){
+      var R=S[i].R, cz=zv+R, ox=p[0], oy=p[1], oz=p[2]-cz;
+      var b=ox*d[0]+oy*d[1]+oz*d[2], cc=ox*ox+oy*oy+oz*oz-R*R, disc=b*b-cc;
+      if(disc<0) return null;
+      var s=R>0? -b-Math.sqrt(disc) : -b+Math.sqrt(disc);
+      p=[p[0]+s*d[0],p[1]+s*d[1],p[2]+s*d[2]];
+      if(Math.hypot(p[0],p[1])>SD) return null;
+      pts.push(p.slice());
+      var N=[p[0]/R,p[1]/R,(p[2]-cz)/R]; if(N[2]<0) N=[-N[0],-N[1],-N[2]];
+      var n2=S[i].n[w], mu=n/n2, ci=d[0]*N[0]+d[1]*N[1]+d[2]*N[2], k=1-mu*mu*(1-ci*ci);
+      if(k<0) return null;
+      var g=Math.sqrt(k)-mu*ci;
+      d=[mu*d[0]+g*N[0],mu*d[1]+g*N[1],mu*d[2]+g*N[2]];
+      n=n2; zv+=S[i].t;
+    }
+    return {pts:pts,p:p,d:d};
+  }
+  function ray(xp,yp,u,w){ /* pupil coords at first vertex plane, field angle u (rad) */
+    var z0=-20, o=[xp, yp+z0*Math.tan(u), z0];
+    return trace(o,[0,Math.sin(u),Math.cos(u)],w);
+  }
+  function at(r,zf){ var s=(zf-r.p[2])/r.d[2]; return [r.p[0]+s*r.d[0], r.p[1]+s*r.d[1]]; }
+
+  /* pupil sample: rings */
+  var pupil=[[0,0]];
+  for(var ring=1;ring<=6;ring++){ var m=ring*6, rr=EPR*ring/6; for(var j=0;j<m;j++){ var a=2*Math.PI*j/m; pupil.push([rr*Math.cos(a),rr*Math.sin(a)]); } }
+
+  function rmsAt(u,zf,w){
+    var xs=[],ys=[];
+    pupil.forEach(function(q){ var r=ray(q[0],q[1],u,w); if(r){ var h=at(r,zf); xs.push(h[0]); ys.push(h[1]); } });
+    var mx=xs.reduce(function(a,b){return a+b;},0)/xs.length, my=ys.reduce(function(a,b){return a+b;},0)/ys.length, s=0;
+    for(var i=0;i<xs.length;i++) s+=(xs[i]-mx)*(xs[i]-mx)+(ys[i]-my)*(ys[i]-my);
+    return Math.sqrt(s/xs.length);
+  }
+  /* fixed image plane: best on-axis d-light focus (golden-section search on RMS spot) */
+  var lo=95, hi=110, g=0.618;
+  for(var it=0;it<60;it++){ var a1=hi-g*(hi-lo), b1=lo+g*(hi-lo); if(rmsAt(0,a1,1)<rmsAt(0,b1,1)) hi=b1; else lo=a1; }
+  var ZF=(lo+hi)/2;
+  window.__rt={ZF:ZF, rms:function(deg,w){return rmsAt(deg*Math.PI/180,ZF,w===undefined?1:w);}};
+
+  var COL={F:'#3B6E8F',d:'#5E7A2E',C:'#B23A2E'};
+  var NS='http://www.w3.org/2000/svg';
+
+  /* side view (meridional, d light) */
+  var SC=4.2, OX=30, OY=72, W=Math.round(OX*2+(ZF+28)*SC), H=144;
+  side.setAttribute('viewBox','0 0 '+W+' '+H);
+  function P(z,y){ return (OX+(z+20)*SC).toFixed(1)+','+(OY-y*SC).toFixed(1); }
+  function sag(R,y){ return R-Math.sign(R)*Math.sqrt(R*R-y*y); }
+  var zv=[0,4.0,6.5], lensSVG='';
+  [[0,'glass1'],[1,'glass2']].forEach(function(e){
+    var i=e[0], a=[], b=[];
+    for(var k=0;k<=40;k++){ var y=-SD+2*SD*k/40; a.push(P(zv[i]+sag(S[i].R,y),y)); b.unshift(P(zv[i+1]+sag(S[i+1].R,y),y)); }
+    lensSVG+='<polygon class="'+e[1]+'" points="'+a.concat(b).join(' ')+'"/>';
+  });
+  var frame=lensSVG+
+    '<line class="axis" x1="'+OX+'" y1="'+OY+'" x2="'+(OX+(ZF+26)*SC).toFixed(1)+'" y2="'+OY+'"/>'+
+    '<line class="img" x1="'+(OX+(ZF+20)*SC).toFixed(1)+'" y1="'+(OY-15*SC)+'" x2="'+(OX+(ZF+20)*SC).toFixed(1)+'" y2="'+(OY+15*SC)+'"/>';
+
+  function drawSide(u){
+    var html='';
+    [0,u].forEach(function(f,idx){
+      if(idx===1 && u===0) return;
+      for(var k=0;k<9;k++){
+        var yp=-EPR+2*EPR*k/8, r=ray(0,yp,f,1); if(!r) continue;
+        var pts=r.pts.map(function(q){return P(q[2],q[1]);}), h=at(r,ZF);
+        pts.push(P(ZF,h[1]));
+        html+='<polyline class="ray'+(idx===0&&u>0?' faint':'')+'" stroke="'+(idx===0?COL.d:'#B23A2E')+'" points="'+pts.join(' ')+'"/>';
+      }
+    });
+    side.innerHTML=frame+html;
+  }
+
+  /* spot diagram */
+  var SPAN=180;            /* micrometres, half-width of the box */
+  function drawSpot(u){
+    var pts={F:[],d:[],C:[]}, cx=0, cy=0, n=0;
+    pupil.forEach(function(q){ var r=ray(q[0],q[1],u,1); if(r){ var h=at(r,ZF); cx+=h[0]; cy+=h[1]; n++; } });
+    cx/=n; cy/=n;
+    var html='<rect class="spotbox" x="0" y="0" width="200" height="200"/>'+
+      '<line class="cross" x1="100" y1="0" x2="100" y2="200"/><line class="cross" x1="0" y1="100" x2="200" y2="100"/>';
+    ['C','d','F'].forEach(function(k){
+      pupil.forEach(function(q){
+        var r=ray(q[0],q[1],u,WL[k]); if(!r) return; var h=at(r,ZF);
+        var x=100+(h[0]-cx)*1000/SPAN*100, y=100-(h[1]-cy)*1000/SPAN*100;
+        if(x<-4||x>204||y<-4||y>204) return;
+        html+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="1.6" fill="'+COL[k]+'"/>';
+      });
+    });
+    html+='<line class="bar" x1="12" y1="188" x2="'+(12+50*100/SPAN).toFixed(1)+'" y2="188"/><text class="bartxt" x="12" y="182">50 µm</text>';
+    spot.innerHTML=html;
+    var rms=rmsAt(u,ZF,1)*1000;
+    sOut.textContent='RMS spot radius '+Math.round(rms)+' µm (d light)';
+  }
+
+  function update(){
+    var deg=parseFloat(slider.value), u=deg*Math.PI/180;
+    fOut.textContent=deg.toFixed(1)+'°';
+    drawSide(u); drawSpot(u);
+  }
+  slider.addEventListener('input',update);
+  update();
+})();
+</script>
+</body>
+</html>
