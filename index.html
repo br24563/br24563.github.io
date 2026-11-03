@@ -117,6 +117,7 @@ footer .contact a{color:var(--ink);font-weight:500}
         <a class="btn primary" href="Brendan_Ryan_Resume.pdf">Download resume (PDF)</a>
         <a class="btn" href="mailto:brendan@moosepass.com">Email me</a>
         <a class="btn" href="https://github.com/br24563">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/brendan-ryan-1a1436345/">LinkedIn</a>
       </div>
     </div>
     <figure class="fringes">
@@ -127,8 +128,8 @@ footer .contact a{color:var(--ink);font-weight:500}
 
   <section class="about" aria-labelledby="about-h">
     <h2 id="about-h">About</h2>
-    <p>I'm working toward a B.S. in Optical Engineering at the University of Rochester, expected May 2028. At Optimax I assemble and align precision optical systems in an ISO 5 cleanroom, verify them with transmitted wavefront interferometry and encircled energy measurements, and design tooling in SolidWorks.</p>
-    <p>Outside of work I build open-source tools for optical design and glass selection. I also work with Rochester's varsity baseball team on Trackman and video analysis, after pitching for the team for two seasons.</p>
+    <p>I'm from Sammamish, WA, and I'm working toward a B.S. in Optical Engineering at the University of Rochester, expected May 2028. At Optimax I assemble and align precision optical systems in cleanrooms, verify them with transmitted wavefront interferometry and polarization purity measurements, and take encircled energy measurements. I also design tooling in SolidWorks, including a mesh that laminarizes air flow to improve interferometer measurements.</p>
+    <p>Outside of work I build open-source tools for optical design and glass selection. I also work with Rochester's varsity baseball team on Trackman and video analysis, after pitching for the team for two seasons. In my free time I enjoy lifting and reading.</p>
   </section>
 
   <section aria-labelledby="projects-h">
@@ -184,7 +185,8 @@ footer .contact a{color:var(--ink);font-weight:500}
       <li><span class="role">Analytics Assistant, Varsity Baseball</span><span class="org">University of Rochester</span><span class="when">Oct 2026 – present</span></li>
       <li><span class="role">Independent Study Researcher</span><span class="org">University of Rochester, Prof. Gerald Gamm</span><span class="when">Sep 2025 – present</span></li>
       <li><span class="role">Systems Test Engineer Intern</span><span class="org">Stealth AI startup, Bellevue, WA</span><span class="when">Jun – Jul 2026</span></li>
-      <li><span class="role">Pitcher, Varsity Baseball (NCAA Division III)</span><span class="org">University of Rochester</span><span class="when">Aug 2024 – Oct 2026</span></li>
+      <li><span class="role">Powder Coat Processor</span><span class="org">Technical Glass Products, Snoqualmie, WA</span><span class="when">May – Aug 2025</span></li>
+      <li><span class="role">Pitcher, Varsity Baseball</span><span class="org">University of Rochester</span><span class="when">Aug 2024 – Oct 2026</span></li>
     </ul>
   </section>
 
@@ -192,6 +194,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     <div class="contact">
       <a href="mailto:brendan@moosepass.com">brendan@moosepass.com</a>
       <a href="https://github.com/br24563">github.com/br24563</a>
+      <a href="https://www.linkedin.com/in/brendan-ryan-1a1436345/">LinkedIn</a>
       <a href="Brendan_Ryan_Resume.pdf">Resume (PDF)</a>
     </div>
     <p>Rochester, NY</p>
@@ -201,7 +204,6 @@ footer .contact a{color:var(--ink);font-weight:500}
 <script>
 (function(){
   var c=document.getElementById('fringes'); if(!c||!c.getContext) return;
-  var hero=document.querySelector('.hero');
   var out=document.getElementById('fringe-readout');
   var ctx=c.getContext('2d'), N=0, img, phase=0, last=0, running=false;
   var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -252,9 +254,12 @@ footer .contact a{color:var(--ink);font-weight:500}
   }
   function release(){ target.x=idle.x; target.y=idle.y; kick(); }
 
-  /* pointer: anywhere over the hero steers tilt; touch: drag on the disc */
-  hero.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse') aim(e.clientX,e.clientY); });
-  hero.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') release(); });
+  /* pointer: anywhere on the page steers tilt; touch: drag on the disc */
+  var mouse=null;
+  document.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse'){ mouse=[e.clientX,e.clientY]; aim(e.clientX,e.clientY); } });
+  document.documentElement.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse'){ mouse=null; release(); } });
+  /* scrolling moves the disc under a still cursor */
+  window.addEventListener('scroll',function(){ if(mouse) aim(mouse[0],mouse[1]); },{passive:true});
   c.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'){ c.setPointerCapture(e.pointerId); aim(e.clientX,e.clientY); } });
   c.addEventListener('pointermove',function(e){ if(e.pointerType!=='mouse' && c.hasPointerCapture(e.pointerId)) aim(e.clientX,e.clientY); });
   c.addEventListener('pointerup',function(e){ if(e.pointerType!=='mouse') release(); });
