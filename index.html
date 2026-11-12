@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<script>try{if(localStorage.getItem('lights')==='off')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <style>
 :root{
   --paper:#F5F6F2;
@@ -20,14 +22,42 @@
   --glass-fill-2:#C9DAD8;
   --serif:"Spectral",Georgia,serif;
   --sans:"Instrument Sans",system-ui,sans-serif;
+  --bezel:#E7E9E3;
+  --panel:#fff;
+  --on-accent:#fff;
+  --wl-f:#3B6E8F;
+  --wl-d:#5E7A2E;
+  --wl-c:#B23A2E;
+}
+:root[data-theme="dark"]{
+  --paper:#0B0E11;
+  --ink:#E4E6E1;
+  --muted:#8D97A0;
+  --rule:#262D34;
+  --fringe:#FF4B38;
+  --glass:#74BDC1;
+  --glass-fill:#16292B;
+  --glass-fill-2:#1F3A3D;
+  --bezel:#12171C;
+  --panel:#11161A;
+  --on-accent:#0B0E11;
+  --wl-f:#6FA9D6;
+  --wl-d:#9DC25C;
+  --wl-c:#F0624F;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.125rem;line-height:1.6}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.125rem;line-height:1.6;transition:background-color .35s,color .35s}
 a{color:var(--glass);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{color:var(--ink)}
 a:focus-visible{outline:2px solid var(--fringe);outline-offset:3px;border-radius:2px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px;position:relative}
+.chip{font-family:var(--sans);font-size:.85rem;font-weight:500;line-height:1.2;padding:7px 13px;border:1.5px solid var(--rule);border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip:focus-visible{outline:2px solid var(--fringe);outline-offset:3px}
+.lights{position:absolute;top:22px;right:28px}
 
 /* Hero */
 .hero{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;padding:88px 0 72px;border-bottom:1px solid var(--rule)}
@@ -36,10 +66,16 @@ h1{font-weight:600;font-size:clamp(3rem,7vw,5.25rem);line-height:.98;letter-spac
 .actions{display:flex;flex-wrap:wrap;gap:12px;font-family:var(--sans);font-size:.95rem;font-weight:500}
 .btn{display:inline-block;padding:10px 18px;border:1.5px solid var(--ink);border-radius:999px;color:var(--ink);text-decoration:none}
 .btn.primary{background:var(--ink);color:var(--paper)}
-.btn:hover{background:var(--glass);border-color:var(--glass);color:#fff}
+.btn:hover{background:var(--glass);border-color:var(--glass);color:var(--on-accent)}
 .fringes{margin:0}
-.fringes canvas{display:block;width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 10px #E7E9E3,0 0 0 11px var(--rule)}
-.fringes figcaption{font-family:var(--sans);font-size:.82rem;line-height:1.45;color:var(--muted);margin-top:26px;max-width:36ch}
+.fringes canvas{display:block;width:100%;aspect-ratio:1;border-radius:50%;box-shadow:0 0 0 10px var(--bezel),0 0 0 11px var(--rule);transition:box-shadow .35s}
+:root[data-theme="dark"] .fringes canvas{box-shadow:0 0 0 10px var(--bezel),0 0 0 11px var(--rule),0 0 70px 6px rgba(255,62,44,.28)}
+.fringes.nulled canvas{box-shadow:0 0 0 10px var(--bezel),0 0 0 13px var(--glass)}
+:root[data-theme="dark"] .fringes.nulled canvas{box-shadow:0 0 0 10px var(--bezel),0 0 0 13px var(--glass),0 0 70px 6px rgba(255,62,44,.28)}
+.fringes .rt-controls{margin:30px 0 0}
+.fringes figcaption{font-family:var(--sans);font-size:.82rem;line-height:1.45;color:var(--muted);margin-top:14px;max-width:36ch}
+.fz-row{display:block;margin-top:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* Sections */
 section{padding:64px 0;border-bottom:1px solid var(--rule)}
@@ -88,7 +124,36 @@ h2{font-weight:500;font-size:2rem;letter-spacing:-.01em;margin:0 0 28px}
 .rt-spot .key{color:var(--muted);display:flex;flex-wrap:wrap;gap:0 12px}
 .rt-spot .key>span{white-space:nowrap}
 .rt-spot .key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
-.spotbox{fill:#fff;stroke:var(--rule)}
+.spotbox{fill:var(--panel);stroke:var(--rule)}
+:root[data-theme="dark"] .project figure img{filter:brightness(.85)}
+
+/* Telecentric demo */
+.tc-out{font-family:var(--sans);font-size:.88rem;font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--sans);font-size:15px;fill:var(--muted)}
+.chief{fill:none;stroke:var(--fringe);stroke-width:1.8}
+.marg{fill:none;stroke:var(--glass);stroke-width:1;opacity:.65}
+.obj{stroke:var(--ink);stroke-width:2.2;fill:var(--ink)}
+.ghost{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.imgh{stroke:var(--fringe);stroke-width:3.5}
+
+/* Pitch lab */
+.pitch{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-areas:"intro view" "ctrl view";gap:8px 44px;align-items:start}
+.pitch .intro{grid-area:intro}
+.pitch .pl-controls{grid-area:ctrl}
+.pitch figure{grid-area:view;margin:0}
+.pitch .intro p{max-width:52ch;margin:0 0 14px}
+.pitch canvas{display:block;width:100%;aspect-ratio:440/420;border:1px solid var(--rule);border-radius:6px;background:var(--panel)}
+.pitch figcaption{font-family:var(--sans);font-size:.82rem;color:var(--muted);margin-top:10px}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.pl-controls .rt-controls{margin:8px 0}
+.pl-controls .rt-controls label{min-width:11.5em}
+.pl-result{display:flex;gap:18px;align-items:center;margin-top:16px}
+.pl-result svg{display:block;width:170px;height:170px;flex:none}
+.pl-result p{font-family:var(--sans);font-size:.88rem;line-height:1.55;margin:0;font-variant-numeric:tabular-nums}
+.pl-result .chip{margin-top:10px}
+.ring{fill:none;stroke:var(--rule)}
+.ref{fill:none;stroke:var(--muted)}
+.now{fill:var(--fringe)}
 .cross{stroke:var(--rule);stroke-width:1}
 .bar{stroke:var(--ink);stroke-width:1.5}
 .bartxt{font-family:var(--sans);font-size:11px;fill:var(--muted)}
@@ -105,11 +170,17 @@ footer .contact a{color:var(--ink);font-weight:500}
   .project{grid-template-columns:1fr;gap:20px}
   .roles li{grid-template-columns:1fr}
   .roles .when{grid-row:auto;grid-column:auto;padding-top:0}
+  .pitch{grid-template-columns:1fr;grid-template-areas:"intro" "view" "ctrl";gap:18px}
+  .lights{top:14px}
 }
 @media (max-width:480px){
   .wrap{padding:0 16px}
   body{font-size:1.06rem}
-  .hero{padding:40px 0 40px;gap:36px}
+  .hero{padding:60px 0 40px;gap:36px}
+  .lights{right:16px}
+  .pl-controls .rt-controls{flex-wrap:wrap;gap:2px 16px}
+  .pl-controls .rt-controls input{flex-basis:100%}
+  .pl-result{flex-direction:column;align-items:flex-start}
   .lede{font-size:1.18rem;margin-bottom:24px}
   .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .btn{text-align:center;padding:12px 6px;white-space:nowrap}
@@ -129,6 +200,7 @@ footer .contact a{color:var(--ink);font-weight:500}
 </head>
 <body>
 <main class="wrap">
+  <button class="chip lights" id="lights" type="button">Lights off</button>
 
   <header class="hero">
     <div>
@@ -142,8 +214,12 @@ footer .contact a{color:var(--ink);font-weight:500}
       </div>
     </div>
     <figure class="fringes">
-      <canvas id="fringes" aria-label="Simulated interferogram. Move the pointer, drag, or use arrow keys to change tilt." role="img"></canvas>
-      <figcaption>A simulated Fizeau interferogram. Move your cursor to the center of the disc (or tap and drag on it) to null the tilt, the way you align a part on the interferometer.<span id="fringe-readout" class="readout" aria-live="polite"></span></figcaption>
+      <canvas id="fringes" aria-label="Simulated interferogram of a misaligned part. Move the pointer, drag, or use arrow keys to change tilt. Click or press Enter to clamp the tilt." role="img"></canvas>
+      <div class="rt-controls">
+        <label for="fz-focus">Focus</label>
+        <input id="fz-focus" type="range" min="-2.5" max="2.5" step="0.01" value="0">
+      </div>
+      <figcaption>A simulated Fizeau interferogram of a part that's out of alignment. Steer the tilt with your cursor until the bullseye is centered, click the disc to clamp it (or just drag on a touchscreen), then turn the focus until the rings open up into one fringe.<span id="fringe-readout" class="readout"></span><span id="fringe-live" class="sr" aria-live="polite"></span><span class="fz-row"><button class="chip" id="fz-new" type="button">New setup</button></span></figcaption>
     </figure>
   </header>
 
@@ -178,7 +254,7 @@ footer .contact a{color:var(--ink);font-weight:500}
         </div>
         <div class="rt-spot">
           <svg id="rt-spot" viewBox="0 0 200 200" role="img" aria-label="Spot diagram at the image plane in F, d and C light"></svg>
-          <p><span id="rt-rms"></span><br><span class="key"><span><i style="background:#3B6E8F"></i>F 486 nm</span> <span><i style="background:#5E7A2E"></i>d 588 nm</span> <span><i style="background:#B23A2E"></i>C 656 nm</span></span></p>
+          <p><span id="rt-rms"></span><br><span class="key"><span><i style="background:var(--wl-f)"></i>F 486 nm</span> <span><i style="background:var(--wl-d)"></i>d 588 nm</span> <span><i style="background:var(--wl-c)"></i>C 656 nm</span></span></p>
         </div>
         <figcaption>An exact 3D ray trace of a 100 mm cemented achromat (N-BK7 and SF5), running in your browser. Slide off-axis and watch the spot grow at the fixed focal plane.</figcaption>
       </figure>
@@ -197,13 +273,52 @@ footer .contact a{color:var(--ink);font-weight:500}
       </figure>
     </article>
 
-    <article class="project text-only">
+    <article class="project">
       <div>
         <h3>Telecentric stereo microscope</h3>
         <p class="kind">Geometrical Optics course, University of Rochester, fall 2025</p>
         <p>A first-order design of a telecentric stereo microscope for art conservation. I balanced magnification, working distance, resolution and size, then turned the first-order layout into a buildable configuration using catalog optics.</p>
       </div>
+      <figure>
+        <svg id="tc-svg" role="img" aria-label="Two lens layouts imaging the same object: a telecentric lens with its stop at the rear focal point, and a conventional lens with its stop at the lens"></svg>
+        <div class="rt-controls">
+          <label for="tc-dist">Object distance <output id="tc-dist-val">80 mm</output></label>
+          <input id="tc-dist" type="range" min="60" max="100" step="0.5" value="80">
+        </div>
+        <p class="tc-out" id="tc-out"></p>
+        <figcaption>Why telecentric: the same object and sensor with the stop in two places. The red bar is where the chief ray lands, which is the size a camera would measure. Move the object out of focus and the telecentric image blurs but keeps its size.</figcaption>
+      </figure>
     </article>
+  </section>
+
+  <section aria-labelledby="pitch-h">
+    <h2 id="pitch-h">Pitch lab</h2>
+    <div class="pitch">
+      <div class="intro">
+        <p>I pitched for Rochester for two seasons and now work on the team's Trackman and video analysis. This is the physics behind those numbers: pick a pitch, change its velocity and spin, and watch where it ends up.</p>
+      </div>
+      <figure>
+        <canvas id="pl-view" role="img" aria-label="Catcher's view of a simulated pitch crossing the strike zone"></canvas>
+        <figcaption>Catcher's view of a right-handed pitcher, in slow motion. The dashed circle is where the same pitch would cross with no spin, so the gap between it and the ball is the spin-induced break.</figcaption>
+      </figure>
+      <div class="pl-controls">
+        <div class="presets" role="group" aria-label="Pitch type">
+          <button class="chip" type="button" data-p="FF">Four-seam</button>
+          <button class="chip" type="button" data-p="SI">Sinker</button>
+          <button class="chip" type="button" data-p="CH">Changeup</button>
+          <button class="chip" type="button" data-p="SL">Slider</button>
+          <button class="chip" type="button" data-p="CU">Curveball</button>
+        </div>
+        <div class="rt-controls"><label for="pl-velo">Velocity <output id="pl-velo-val"></output></label><input id="pl-velo" type="range" min="65" max="102" step="1" value="93"></div>
+        <div class="rt-controls"><label for="pl-spin">Spin rate <output id="pl-spin-val"></output></label><input id="pl-spin" type="range" min="800" max="3400" step="50" value="2300"></div>
+        <div class="rt-controls"><label for="pl-tilt">Spin tilt <output id="pl-tilt-val"></output></label><input id="pl-tilt" type="range" min="0" max="47" step="1" value="4"></div>
+        <div class="rt-controls"><label for="pl-eff">Spin efficiency <output id="pl-eff-val"></output></label><input id="pl-eff" type="range" min="0" max="100" step="1" value="92"></div>
+        <div class="pl-result">
+          <svg id="pl-plot" viewBox="0 0 220 220" role="img" aria-label="Movement plot: horizontal and induced vertical break, catcher's view"></svg>
+          <p><span id="pl-out"></span><br><button class="chip" id="pl-throw" type="button">Throw it again</button></p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section aria-labelledby="exp-h">
@@ -230,15 +345,77 @@ footer .contact a{color:var(--ink);font-weight:500}
 </main>
 
 <script>
+/* Lights toggle */
+(function(){
+  var b=document.getElementById('lights'), root=document.documentElement; if(!b) return;
+  function sync(){ b.textContent=root.getAttribute('data-theme')==='dark'?'Lights on':'Lights off'; }
+  b.addEventListener('click',function(){
+    var dk=root.getAttribute('data-theme')!=='dark';
+    if(dk) root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+    try{ localStorage.setItem('lights',dk?'off':'on'); }catch(_){}
+    sync(); document.dispatchEvent(new Event('themechange'));
+  });
+  sync();
+})();
+
+/* Interferogram nulling game + live favicon */
 (function(){
   var c=document.getElementById('fringes'); if(!c||!c.getContext) return;
-  var out=document.getElementById('fringe-readout');
-  var ctx=c.getContext('2d'), N=0, img, phase=0, last=0, running=false;
+  var fig=c.parentNode, out=document.getElementById('fringe-readout'), live=document.getElementById('fringe-live');
+  var knobEl=document.getElementById('fz-focus'), again=document.getElementById('fz-new');
+  var ctx=c.getContext('2d'), N=0, img, phase=0, last=0;
   var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dark=[24,30,38], lite=[226,74,58];
-  var POWER=0.6, ASTIG=0.15, MAXT=4.5;           /* waves */
+  var ASTIG=0.15, MAXT=4.5, TOL_T=0.13, TOL_P=0.08;      /* waves */
+  var hid={x:0,y:0,p:0};                                  /* the misalignment dealt this round */
   var idle={x:2.4,y:0.8}, tilt={x:idle.x,y:idle.y}, target={x:idle.x,y:idle.y};
-  var dirty=true, nulledShown=false;
+  var knob=0, locked=false, state='idle', t0=0, hold=0, wonText='', shown=null;
+  var dirty=true, loop=false, visible=true;
+
+  /* favicon: a 32 px copy of the current fringe pattern */
+  var link=document.querySelector('link[rel="icon"]'), fc=document.createElement('canvas'), ftimer=0;
+  fc.width=fc.height=32;
+  var fctx=fc.getContext('2d'), fimg=fctx.createImageData(32,32);
+  function favSoon(){ if(!link||ftimer) return; ftimer=setTimeout(function(){ ftimer=0; fav(); },250); }
+  function fav(){
+    var d=fimg.data, i=0, tx=tilt.x+hid.x, ty=tilt.y+hid.y, P=hid.p+knob;
+    for(var y=0;y<32;y++){
+      var py=(y-15.5)/16;
+      for(var x=0;x<32;x++,i+=4){
+        var px=(x-15.5)/16, r2=px*px+py*py;
+        if(r2>1){ d[i+3]=0; continue; }
+        var w=0.45*(tx*px+ty*py+P*r2+ASTIG*(px*px-py*py));
+        var I=0.5+0.5*Math.cos(6.2832*w);
+        d[i]=24+202*I; d[i+1]=30+44*I; d[i+2]=38+20*I; d[i+3]=r2>0.86?255*(1-r2)/0.14:255;
+      }
+    }
+    fctx.putImageData(fimg,0,0);
+    try{ link.href=fc.toDataURL('image/png'); }catch(_){}
+  }
+
+  function palette(){
+    var dk=document.documentElement.getAttribute('data-theme')==='dark';
+    dark=dk?[5,7,9]:[24,30,38]; lite=dk?[255,62,44]:[226,74,58]; dirty=true; kick();
+  }
+  function deal(){
+    var a=Math.random()*6.2832, m=0.6+Math.random()*0.8;
+    hid.x=m*Math.cos(a); hid.y=m*Math.sin(a);
+    hid.p=(Math.random()<0.5?-1:1)*(0.8+Math.random());
+    knob=0; if(knobEl) knobEl.value=0;
+    locked=false; state='idle'; hold=0; wonText='';
+    fig.classList.remove('nulled'); if(out) out.classList.remove('nulled'); if(live) live.textContent='';
+    dirty=true; favSoon(); kick();
+  }
+  function start(){ if(state==='idle'){ state='running'; t0=performance.now(); hold=0; dirty=true; kick(); } }
+  function win(){
+    var secs=(hold-t0)/1000, best=NaN;
+    try{ best=parseFloat(localStorage.getItem('fz-best')); }catch(_){}
+    var record=!(best>0)||secs<best;
+    if(record){ try{ localStorage.setItem('fz-best',secs.toFixed(1)); }catch(_){} }
+    wonText='Nulled in '+secs.toFixed(1)+' s'+(record?(best>0?', a new best':''):' (best '+best.toFixed(1)+' s)')+
+      '. The 0.3 waves left is astigmatism in the part itself, which no alignment removes.';
+    state='won'; fig.classList.add('nulled'); if(out) out.classList.add('nulled'); if(live) live.textContent=wonText;
+  }
 
   function size(){
     var s=Math.round(c.getBoundingClientRect().width*Math.min(window.devicePixelRatio||1,2));
@@ -246,13 +423,13 @@ footer .contact a{color:var(--ink);font-weight:500}
   }
   function draw(){
     if(!img) return;
-    var d=img.data, h=N/2, i=0, tx=tilt.x, ty=tilt.y;
+    var d=img.data, h=N/2, i=0, tx=tilt.x+hid.x, ty=tilt.y+hid.y, P=hid.p+knob;
     for(var y=0;y<N;y++){
       var py=(y-h)/h;
       for(var x=0;x<N;x++,i+=4){
         var px=(x-h)/h, r2=px*px+py*py;
         if(r2>1){d[i+3]=0;continue;}
-        var w=tx*px+ty*py+POWER*r2+ASTIG*(px*px-py*py);
+        var w=tx*px+ty*py+P*r2+ASTIG*(px*px-py*py);
         var I=0.5+0.5*Math.cos(6.2832*w+phase);
         var edge=r2>0.985?(1-r2)/0.015:1;
         d[i]=dark[0]+(lite[0]-dark[0])*I; d[i+1]=dark[1]+(lite[1]-dark[1])*I; d[i+2]=dark[2]+(lite[2]-dark[2])*I; d[i+3]=255*edge;
@@ -262,54 +439,79 @@ footer .contact a{color:var(--ink);font-weight:500}
     readout();
     dirty=false;
   }
+  function pv(tx,ty,P){
+    var lo=1e9, hi=-1e9;
+    for(var j=-10;j<=10;j++) for(var i=-10;i<=10;i++){
+      var px=i/10, py=j/10, r2=px*px+py*py; if(r2>1) continue;
+      var w=tx*px+ty*py+P*r2+ASTIG*(px*px-py*py);
+      if(w<lo) lo=w; if(w>hi) hi=w;
+    }
+    return hi-lo;
+  }
   function readout(){
     if(!out) return;
-    var t=Math.hypot(tilt.x,tilt.y);
-    if(t<0.12){
-      out.textContent='Tilt nulled. What’s left is 0.6 waves of power: a lens would refocus it out.';
-      out.classList.add('nulled');
-    } else {
-      out.textContent='Tilt '+t.toFixed(1)+' waves, power '+POWER.toFixed(1)+' waves';
-      out.classList.remove('nulled');
+    var s;
+    if(state==='won') s=wonText;
+    else {
+      var tx=tilt.x+hid.x, ty=tilt.y+hid.y, P=hid.p+knob;
+      s='Tilt '+Math.hypot(tx,ty).toFixed(2)+', power '+(P<0?'−':'+')+Math.abs(P).toFixed(2)+', PV '+pv(tx,ty,P).toFixed(1)+' waves';
+      if(state==='running') s+=' · '+((performance.now()-t0)/1000).toFixed(1)+' s';
+      if(locked) s+=' · tilt clamped, click to release';
     }
+    if(s!==shown){ out.textContent=s; shown=s; }
   }
   function aim(clientX,clientY){
+    if(locked) return;
     var r=c.getBoundingClientRect(), rad=r.width/2;
     var dx=(clientX-(r.left+rad))/rad, dy=(clientY-(r.top+rad))/rad;
     target.x=Math.max(-MAXT,Math.min(MAXT,dx*2.2));
     target.y=Math.max(-MAXT,Math.min(MAXT,dy*2.2));
     kick();
   }
-  function release(){ target.x=idle.x; target.y=idle.y; kick(); }
+  function release(){ if(locked) return; target.x=idle.x; target.y=idle.y; kick(); }
+  function toggleLock(){ locked=!locked; dirty=true; kick(); }
 
-  /* pointer: anywhere on the page steers tilt; touch: drag on the disc */
+  /* mouse: anywhere on the page steers tilt, a click on the disc clamps it; touch: drag on the disc */
   var mouse=null;
   document.addEventListener('pointermove',function(e){ if(e.pointerType==='mouse'){ mouse=[e.clientX,e.clientY]; aim(e.clientX,e.clientY); } });
   document.documentElement.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse'){ mouse=null; release(); } });
-  /* scrolling moves the disc under a still cursor */
   window.addEventListener('scroll',function(){ if(mouse) aim(mouse[0],mouse[1]); },{passive:true});
-  c.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'){ aim(e.clientX,e.clientY); try{ c.setPointerCapture(e.pointerId); }catch(_){} } });
+  c.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') start(); });
+  c.addEventListener('pointerdown',function(e){
+    start();
+    if(e.pointerType==='mouse'){
+      if(e.button===0){ toggleLock(); if(!locked) aim(e.clientX,e.clientY); }
+      return;
+    }
+    locked=false; aim(e.clientX,e.clientY);
+    try{ c.setPointerCapture(e.pointerId); }catch(_){}
+  });
   c.addEventListener('pointermove',function(e){ if(e.pointerType!=='mouse' && c.hasPointerCapture(e.pointerId)) aim(e.clientX,e.clientY); });
-  /* touch leaves the tilt where you set it; a vertical swipe scrolls the page instead */
-  c.addEventListener('pointercancel',function(e){ if(e.pointerType==='mouse') release(); });
-  /* keyboard: arrows nudge tilt */
+  /* keyboard: arrows nudge tilt (also while clamped), Enter or Space clamps */
   c.tabIndex=0;
   c.addEventListener('keydown',function(e){
-    var k={ArrowLeft:[-.3,0],ArrowRight:[.3,0],ArrowUp:[0,-.3],ArrowDown:[0,.3]}[e.key];
-    if(!k) return; e.preventDefault();
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); start(); toggleLock(); return; }
+    var k={ArrowLeft:[-.1,0],ArrowRight:[.1,0],ArrowUp:[0,-.1],ArrowDown:[0,.1]}[e.key];
+    if(!k) return; e.preventDefault(); start();
     target.x=Math.max(-MAXT,Math.min(MAXT,target.x+k[0])); target.y=Math.max(-MAXT,Math.min(MAXT,target.y+k[1])); kick();
   });
+  if(knobEl) knobEl.addEventListener('input',function(){ knob=parseFloat(knobEl.value)||0; start(); dirty=true; favSoon(); kick(); });
+  if(again) again.addEventListener('click',deal);
+  document.addEventListener('themechange',palette);
 
-  var visible=true, loop=false;
   function kick(){ if(!loop){ loop=true; requestAnimationFrame(tick); } }
   function tick(t){
     var moving=Math.abs(target.x-tilt.x)>0.002||Math.abs(target.y-tilt.y)>0.002;
-    if(moving){ tilt.x+=(target.x-tilt.x)*0.18; tilt.y+=(target.y-tilt.y)*0.18; dirty=true; }
+    if(moving){ tilt.x+=(target.x-tilt.x)*0.18; tilt.y+=(target.y-tilt.y)*0.18; dirty=true; favSoon(); }
     if(!still && visible && t-last>40){ phase-=0.05; last=t; dirty=true; }
-    if(dirty) draw();
-    if(moving || (!still && visible)){ requestAnimationFrame(tick); } else { loop=false; }
+    if(state==='running'){
+      var ok=Math.hypot(tilt.x+hid.x,tilt.y+hid.y)<TOL_T && Math.abs(hid.p+knob)<TOL_P;
+      if(!ok) hold=0; else if(!hold) hold=performance.now(); else if(performance.now()-hold>450){ win(); dirty=true; }
+    }
+    if(dirty) draw(); else if(state==='running') readout();
+    if(moving || state==='running' || (!still && visible)){ requestAnimationFrame(tick); } else { loop=false; }
   }
-  size();
+  palette(); deal(); size(); fav();
   window.addEventListener('resize',size);
   function setVis(v){ visible=v; if(v) kick(); }
   if('IntersectionObserver' in window){
@@ -318,7 +520,9 @@ footer .contact a{color:var(--ink);font-weight:500}
   document.addEventListener('visibilitychange',function(){ setVis(!document.hidden); });
   kick();
 })();
+</script>
 
+<script>
 (function(){
   var side=document.getElementById('rt-side'), spot=document.getElementById('rt-spot');
   var slider=document.getElementById('rt-field'), fOut=document.getElementById('rt-field-val'), sOut=document.getElementById('rt-rms');
@@ -372,7 +576,6 @@ footer .contact a{color:var(--ink);font-weight:500}
   var ZF=(lo+hi)/2;
   window.__rt={ZF:ZF, rms:function(deg,w){return rmsAt(deg*Math.PI/180,ZF,w===undefined?1:w);}};
 
-  var COL={F:'#3B6E8F',d:'#5E7A2E',C:'#B23A2E'};
   var NS='http://www.w3.org/2000/svg';
 
   /* side view (meridional, d light) */
@@ -398,7 +601,7 @@ footer .contact a{color:var(--ink);font-weight:500}
         var yp=-EPR+2*EPR*k/8, r=ray(0,yp,f,1); if(!r) continue;
         var pts=r.pts.map(function(q){return P(q[2],q[1]);}), h=at(r,ZF);
         pts.push(P(ZF,h[1]));
-        html+='<polyline class="ray'+(idx===0&&u>0?' faint':'')+'" stroke="'+(idx===0?COL.d:'#B23A2E')+'" points="'+pts.join(' ')+'"/>';
+        html+='<polyline class="ray'+(idx===0&&u>0?' faint':'')+'" style="stroke:var('+(idx===0?'--wl-d':'--wl-c')+')" points="'+pts.join(' ')+'"/>';
       }
     });
     side.innerHTML=frame+html;
@@ -417,7 +620,7 @@ footer .contact a{color:var(--ink);font-weight:500}
         var r=ray(q[0],q[1],u,WL[k]); if(!r) return; var h=at(r,ZF);
         var x=100+(h[0]-cx)*1000/SPAN*100, y=100-(h[1]-cy)*1000/SPAN*100;
         if(x<-4||x>204||y<-4||y>204) return;
-        html+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="1.6" fill="'+COL[k]+'"/>';
+        html+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="1.6" style="fill:var(--wl-'+k.toLowerCase()+')"/>';
       });
     });
     html+='<line class="bar" x1="12" y1="188" x2="'+(12+50*100/SPAN).toFixed(1)+'" y2="188"/><text class="bartxt" x="12" y="182">50 µm</text>';
@@ -433,6 +636,212 @@ footer .contact a{color:var(--ink);font-weight:500}
   }
   slider.addEventListener('input',update);
   update();
+})();
+</script>
+<script>
+/* Telecentric vs conventional: first-order thin-lens layout */
+(function(){
+  var svg=document.getElementById('tc-svg'), sl=document.getElementById('tc-dist');
+  var dOut=document.getElementById('tc-dist-val'), out=document.getElementById('tc-out');
+  if(!svg||!sl) return;
+  var F=40, ZI=80, HO=8, LH=17, SC=2.8, OX=310, W=572, H=262;   /* mm: focal length, sensor distance, object height, lens semi-height */
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  function X(z){ return (OX+z*SC).toFixed(1); }
+
+  function panel(oy,zs,a,s,label){   /* zs: stop position behind the lens, a: stop radius, s: object distance */
+    function Y(y){ return (oy-y*SC).toFixed(1); }
+    function through(ya){              /* ray from the object tip that crosses the stop plane at height ya */
+      var u=(ya-HO*(1-zs/F))/(s+zs*(1-s/F)), y=HO+u*s, u2=u-y/F, yi=y+ZI*u2;
+      return {pts:X(-s)+','+Y(HO)+' '+X(0)+','+Y(y)+' '+X(ZI)+','+Y(yi), yi:yi};
+    }
+    var chief=through(0), m1=through(a), m2=through(-a);
+    var h='<text class="lbl" x="16" y="'+(oy-LH*SC-8)+'">'+label+'</text>'+
+      '<line class="axis" x1="16" y1="'+oy+'" x2="'+(W-10)+'" y2="'+oy+'"/>'+
+      '<ellipse class="glass1" cx="'+X(0)+'" cy="'+oy+'" rx="6" ry="'+(LH*SC)+'"/>'+
+      '<line class="img" x1="'+X(zs)+'" y1="'+Y(a)+'" x2="'+X(zs)+'" y2="'+Y(LH-3)+'"/>'+
+      '<line class="img" x1="'+X(zs)+'" y1="'+Y(-a)+'" x2="'+X(zs)+'" y2="'+Y(-LH+3)+'"/>'+
+      '<line class="img" x1="'+X(ZI)+'" y1="'+Y(15)+'" x2="'+X(ZI)+'" y2="'+Y(-15)+'"/>'+
+      '<line class="ghost" x1="'+X(-80)+'" y1="'+oy+'" x2="'+X(-80)+'" y2="'+Y(HO)+'"/>'+
+      '<line class="ghost" x1="'+X(ZI-7)+'" y1="'+Y(-HO)+'" x2="'+X(ZI+9)+'" y2="'+Y(-HO)+'"/>'+
+      '<polyline class="marg" points="'+m1.pts+'"/><polyline class="marg" points="'+m2.pts+'"/>'+
+      '<polyline class="chief" points="'+chief.pts+'"/>'+
+      '<line class="obj" x1="'+X(-s)+'" y1="'+oy+'" x2="'+X(-s)+'" y2="'+Y(HO-1.5)+'"/>'+
+      '<polygon class="obj" points="'+X(-s)+','+Y(HO)+' '+X(-s-1.3)+','+Y(HO-2.4)+' '+X(-s+1.3)+','+Y(HO-2.4)+'"/>'+
+      '<line class="imgh" x1="'+(+X(ZI)+4)+'" y1="'+oy+'" x2="'+(+X(ZI)+4)+'" y2="'+Y(chief.yi)+'"/>';
+    return {html:h, size:Math.abs(chief.yi)};
+  }
+  function pct(v){ var p=(v/HO-1)*100; return (Math.abs(p)<0.05?'0.0':(p>0?'+':'−')+Math.abs(p).toFixed(1))+'%'; }
+  function update(){
+    var s=parseFloat(sl.value);
+    var t=panel(74,F,3,s,'Telecentric: stop at the rear focal point'), c=panel(206,4,5,s,'Conventional: stop at the lens');
+    svg.innerHTML=t.html+c.html;
+    dOut.textContent=s.toFixed(1)+' mm';
+    out.textContent='Measured size: telecentric '+t.size.toFixed(2)+' mm ('+pct(t.size)+'), conventional '+c.size.toFixed(2)+' mm ('+pct(c.size)+')';
+  }
+  sl.addEventListener('input',update);
+  update();
+})();
+
+/* Pitch lab: point-mass trajectory with drag and Magnus lift */
+(function(){
+  var cv=document.getElementById('pl-view'); if(!cv||!cv.getContext) return;
+  function el(id){ return document.getElementById(id); }
+  var ctx=cv.getContext('2d'), W=440, H=420;
+  var inV=el('pl-velo'), inS=el('pl-spin'), inT=el('pl-tilt'), inE=el('pl-eff');
+  var out=el('pl-out'), plot=el('pl-plot'), throwBtn=el('pl-throw');
+  var chips=[].slice.call(document.querySelectorAll('.presets .chip'));
+  var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* feet, seconds. K = air density x cross-section / (2 x mass); lift fit after Alan Nathan */
+  var K=5.3e-3, CD=0.33, G=32.17, RB=0.121, YP=1.417, REL=[-1.5,55,5.8], ZC=2.5;
+  var LIFT=0.84;   /* empirical trim on the lift fit so a 93 mph, 2300 rpm four-seam breaks about 16 in up and 9 in arm side */
+  var PRE={FF:{v:93,s:2300,t:4,e:92}, SI:{v:91,s:2100,t:8,e:88}, CH:{v:83,s:1700,t:8,e:85}, SL:{v:84,s:2400,t:38,e:15}, CU:{v:77,s:2600,t:28,e:55}};
+
+  function sim(p,spin,aim){
+    var v0=p.v*1.4667, th=p.t/48*2*Math.PI;
+    var fx=-Math.sin(th), fz=Math.cos(th);      /* direction the clock hand points, seen from the catcher */
+    var wx=-fz, wz=fx;                           /* unit axis of the active spin; (w x v) points along (fx,fz) */
+    var om=spin? p.s*2*Math.PI/60*p.e/100 : 0;
+    var pos=REL.slice(), vel=[v0*aim[0], -v0*Math.sqrt(1-aim[0]*aim[0]-aim[1]*aim[1]), v0*aim[1]];
+    var dt=0.002, t=0, pts=[pos.slice()], prev=pos;
+    while(pos[1]>YP && t<2.5){
+      var v=Math.hypot(vel[0],vel[1],vel[2]), cl=0;
+      if(om>0){ var S=RB*om/v; cl=LIFT/(2.32+0.4/S); }
+      var cx=-wz*vel[1], cy=wz*vel[0]-wx*vel[2], cz=wx*vel[1];
+      vel[0]+=(-K*CD*v*vel[0]+K*cl*v*cx)*dt;
+      vel[1]+=(-K*CD*v*vel[1]+K*cl*v*cy)*dt;
+      vel[2]+=(-K*CD*v*vel[2]+K*cl*v*cz-G)*dt;
+      prev=pos.slice();
+      pos[0]+=vel[0]*dt; pos[1]+=vel[1]*dt; pos[2]+=vel[2]*dt; t+=dt;
+      pts.push(pos.slice());
+    }
+    var f=(prev[1]-YP)/(prev[1]-pos[1]||1);     /* land exactly on the front of the plate */
+    var end=[prev[0]+(pos[0]-prev[0])*f, YP, prev[2]+(pos[2]-prev[2])*f];
+    pts[pts.length-1]=end;
+    return {pts:pts, end:end, t:t-dt*(1-f), v:Math.hypot(vel[0],vel[1],vel[2])/1.4667};
+  }
+  function compute(p){
+    /* aim so the spinless pitch crosses the middle of the zone; the real pitch then misses by its break */
+    var aim=[0,0], ghost;
+    for(var i=0;i<6;i++){ ghost=sim(p,false,aim); aim[0]-=ghost.end[0]/(REL[1]-YP); aim[1]-=(ghost.end[2]-ZC)/(REL[1]-YP); }
+    ghost=sim(p,false,aim);
+    var real=sim(p,true,aim);
+    return {ghost:ghost, real:real, hb:(real.end[0]-ghost.end[0])*12, ivb:(real.end[2]-ghost.end[2])*12};
+  }
+  var refs={}; Object.keys(PRE).forEach(function(k){ var r=compute(PRE[k]); refs[k]=[r.hb,r.ivb]; });
+
+  /* catcher's-view perspective */
+  var CAMY=-8, FL=880, CX=W/2, Y0=130;
+  function pr(x,y,z){ var d=y-CAMY; return [CX+FL*x/d, Y0-FL*(z-ZC)/d, FL/d]; }
+  var col={};
+  function colors(){
+    var s=getComputedStyle(document.documentElement);
+    ['ink','muted','rule','fringe','panel','paper'].forEach(function(k){ col[k]=s.getPropertyValue('--'+k).trim(); });
+  }
+  function size(){
+    var w=cv.clientWidth; if(!w) return;
+    var k=Math.min(window.devicePixelRatio||1,2)*w/W;
+    cv.width=Math.round(W*k); cv.height=Math.round(H*k);
+    ctx.setTransform(cv.width/W,0,0,cv.width/W,0,0);
+    draw(frac);
+  }
+  function path(pts,close){
+    ctx.beginPath();
+    pts.forEach(function(q,i){ var s=pr(q[0],q[1],q[2]); if(i) ctx.lineTo(s[0],s[1]); else ctx.moveTo(s[0],s[1]); });
+    if(close) ctx.closePath();
+  }
+  var cur=null, frac=1, raf=0;
+  function draw(fr){
+    if(!cur) return;
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1; ctx.setLineDash([]); ctx.globalAlpha=1;
+    /* mound and rubber */
+    var m=pr(0,59,0);
+    ctx.fillStyle=col.rule; ctx.beginPath(); ctx.ellipse(m[0],m[1],9*m[2],4.5,0,0,6.2832); ctx.fill();
+    ctx.strokeStyle=col.muted; path([[-1,60.5,0],[1,60.5,0]]); ctx.stroke();
+    /* plate */
+    ctx.fillStyle=col.paper; ctx.strokeStyle=col.ink;
+    path([[-.708,YP,0],[.708,YP,0],[.708,.708,0],[0,0,0],[-.708,.708,0]],true); ctx.fill(); ctx.stroke();
+    /* strike zone */
+    ctx.strokeStyle=col.rule;
+    [-.236,.236].forEach(function(x){ path([[x,YP,1.5],[x,YP,3.5]]); ctx.stroke(); });
+    [2.167,2.833].forEach(function(z){ path([[-.708,YP,z],[.708,YP,z]]); ctx.stroke(); });
+    ctx.strokeStyle=col.ink; ctx.lineWidth=1.5;
+    path([[-.708,YP,1.5],[.708,YP,1.5],[.708,YP,3.5],[-.708,YP,3.5]],true); ctx.stroke();
+    /* the same pitch with no spin */
+    ctx.strokeStyle=col.muted; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    path(cur.ghost.pts.filter(function(_,i,a){ return i%8===0||i===a.length-1; })); ctx.stroke();
+    var g=pr(cur.ghost.end[0],YP,cur.ghost.end[2]);
+    ctx.beginPath(); ctx.arc(g[0],g[1],RB*g[2],0,6.2832); ctx.stroke();
+    ctx.setLineDash([]);
+    /* the pitch */
+    var pts=cur.real.pts, n=Math.min(pts.length-1,Math.floor(fr*(pts.length-1)));
+    ctx.fillStyle=col.fringe; ctx.globalAlpha=.22;
+    for(var i=0;i<n;i+=6){ var s=pr(pts[i][0],pts[i][1],pts[i][2]); ctx.beginPath(); ctx.arc(s[0],s[1],Math.max(1.2,RB*s[2]),0,6.2832); ctx.fill(); }
+    ctx.globalAlpha=1;
+    var b=pr(pts[n][0],pts[n][1],pts[n][2]);
+    ctx.beginPath(); ctx.arc(b[0],b[1],Math.max(1.6,RB*b[2]),0,6.2832); ctx.fill();
+    ctx.strokeStyle=col.ink; ctx.lineWidth=1; ctx.stroke();
+  }
+  function animate(){
+    cancelAnimationFrame(raf);
+    if(still||!cur){ frac=1; draw(1); return; }
+    var dur=cur.real.t*3000, t0=performance.now();     /* one-third speed */
+    (function step(now){
+      frac=Math.max(0,Math.min(1,(now-t0)/dur)); draw(frac);   /* a frame's timestamp can predate t0 */
+      if(frac<1) raf=requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function tiltText(q){ var h=Math.floor(q/4)%12||12, mm=(q%4)*15; return h+':'+(mm<10?'0':'')+mm; }
+  function drawPlot(){
+    function xy(hb,ivb){ function cl(v){ return Math.max(-26,Math.min(26,v)); } return [110+cl(hb)*4,110-cl(ivb)*4]; }
+    var h='<rect class="spotbox" x="0.5" y="0.5" width="219" height="219"/>'+
+      '<circle class="ring" cx="110" cy="110" r="48"/><circle class="ring" cx="110" cy="110" r="96"/>'+
+      '<line class="cross" x1="110" y1="6" x2="110" y2="214"/><line class="cross" x1="6" y1="110" x2="214" y2="110"/>'+
+      '<text class="bartxt" x="114" y="17">rise</text>'+
+      '<text class="bartxt" x="7" y="212">arm side</text><text class="bartxt" x="213" y="212" text-anchor="end">glove side</text>';
+    Object.keys(refs).forEach(function(k){
+      var q=xy(refs[k][0],refs[k][1]);
+      h+='<circle class="ref" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="3.5"/><text class="bartxt" x="'+(q[0]+(k==='CH'?-6:6)).toFixed(1)+'" y="'+(q[1]+(k==='CH'?10:k==='SI'?0:4)).toFixed(1)+'"'+(k==='CH'?' text-anchor="end"':'')+'>'+k+'</text>';
+    });
+    var p=xy(cur.hb,cur.ivb);
+    plot.innerHTML=h+'<circle class="now" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="6"/>';
+  }
+  function read(){ return {v:+inV.value, s:+inS.value, t:+inT.value, e:+inE.value}; }
+  function refresh(){
+    var p=read();
+    el('pl-velo-val').textContent=p.v+' mph';
+    el('pl-spin-val').textContent=p.s+' rpm';
+    el('pl-tilt-val').textContent=tiltText(p.t);
+    el('pl-eff-val').textContent=p.e+'%';
+    cur=compute(p);
+    var iv=Math.round(Math.abs(cur.ivb)), hb=Math.round(Math.abs(cur.hb));
+    out.textContent='Reaches the plate in '+cur.real.t.toFixed(2)+' s at '+Math.round(cur.real.v)+' mph. Spin moves it '+
+      iv+' in '+(cur.ivb>=0?'up':'down')+' and '+hb+' in to the '+(cur.hb<=0?'arm':'glove')+' side.';
+    drawPlot();
+  }
+  function mark(k){ chips.forEach(function(c){ c.setAttribute('aria-pressed',c.getAttribute('data-p')===k?'true':'false'); }); }
+  [inV,inS,inT,inE].forEach(function(inp){
+    inp.addEventListener('input',function(){ mark(null); cancelAnimationFrame(raf); refresh(); frac=1; draw(1); });
+    inp.addEventListener('change',animate);
+  });
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      var k=c.getAttribute('data-p'), p=PRE[k];
+      inV.value=p.v; inS.value=p.s; inT.value=p.t; inE.value=p.e;
+      mark(k); refresh(); animate();
+    });
+  });
+  if(throwBtn) throwBtn.addEventListener('click',animate);
+  document.addEventListener('themechange',function(){ colors(); draw(frac); });
+  window.addEventListener('resize',size);
+
+  colors(); mark('FF'); refresh(); size();
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(e){ if(e[0].isIntersecting){ io.disconnect(); animate(); } },{threshold:.6});
+    io.observe(cv);
+  }
 })();
 </script>
 </body>
