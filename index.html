@@ -8,7 +8,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="data:,">
+<link rel="canonical" href="https://br24563.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://br24563.github.io/">
+<meta property="og:title" content="Brendan Ryan, optical engineering">
+<meta property="og:description" content="Optical engineering student at the University of Rochester and optical systems intern at Optimax Systems. Projects, an interferogram to null, and a pitch lab.">
+<meta property="og:image" content="https://br24563.github.io/assets/og-interferogram.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Brendan Ryan, optical engineering, University of Rochester, beside a simulated interferogram.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <script>try{if(localStorage.getItem('lights')==='off')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <style>
 :root{
@@ -57,10 +68,17 @@ a:focus-visible{outline:2px solid var(--fringe);outline-offset:3px;border-radius
 .chip:hover{border-color:var(--ink)}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .chip:focus-visible{outline:2px solid var(--fringe);outline-offset:3px}
-.lights{position:absolute;top:22px;right:28px}
+.lights{flex:none}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 0;background:var(--paper);border-bottom:1px solid var(--rule);font-family:var(--sans);font-size:.9rem;font-weight:500;transition:background-color .35s}
+.top .links{display:flex;gap:22px;min-width:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.top .links::-webkit-scrollbar{display:none}
+.top a{color:var(--muted);text-decoration:none;padding:4px 0}
+.top a:hover{color:var(--ink)}
 
 /* Hero */
-.hero{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;padding:88px 0 72px;border-bottom:1px solid var(--rule)}
+.hero{display:grid;grid-template-columns:1fr 360px;gap:56px;align-items:center;padding:68px 0 72px;border-bottom:1px solid var(--rule)}
 h1{font-weight:600;font-size:clamp(3rem,7vw,5.25rem);line-height:.98;letter-spacing:-.02em;margin:0 0 28px}
 .lede{font-size:1.3rem;line-height:1.5;max-width:30ch;margin:0 0 32px}
 .actions{display:flex;flex-wrap:wrap;gap:12px;font-family:var(--sans);font-size:.95rem;font-weight:500}
@@ -146,6 +164,7 @@ h2{font-weight:500;font-size:2rem;letter-spacing:-.01em;margin:0 0 28px}
 .pitch canvas:focus-visible{outline:2px solid var(--fringe);outline-offset:3px}
 .pitch figcaption{font-family:var(--sans);font-size:.82rem;color:var(--muted);margin-top:10px}
 .presets{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.presets.hand{margin-bottom:10px}
 .pl-controls .rt-controls{margin:8px 0}
 .pl-controls .rt-controls label{min-width:11.5em}
 .pl-result{display:flex;gap:18px;align-items:center;margin-top:16px}
@@ -172,13 +191,15 @@ footer .contact a{color:var(--ink);font-weight:500}
   .roles li{grid-template-columns:1fr}
   .roles .when{grid-row:auto;grid-column:auto;padding-top:0}
   .pitch{grid-template-columns:1fr;grid-template-areas:"intro" "view" "ctrl";gap:18px}
-  .lights{top:14px}
 }
 @media (max-width:480px){
   .wrap{padding:0 16px}
   body{font-size:1.06rem}
-  .hero{padding:60px 0 40px;gap:36px}
-  .lights{right:16px}
+  .hero{padding:40px 0 40px;gap:36px}
+  .top{font-size:.8rem;gap:10px}
+  .top .links{gap:12px}
+  .top .links a[href="#contact"]{display:none}
+  .top .chip{padding:6px 9px;font-size:.78rem}
   .pl-controls .rt-controls{flex-wrap:wrap;gap:2px 16px}
   .pl-controls .rt-controls input{flex-basis:100%}
   .pl-result{flex-direction:column;align-items:flex-start}
@@ -201,7 +222,16 @@ footer .contact a{color:var(--ink);font-weight:500}
 </head>
 <body>
 <main class="wrap">
-  <button class="chip lights" id="lights" type="button">Lights off</button>
+  <nav class="top" aria-label="Sections">
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#pitch">Pitch lab</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="chip lights" id="lights" type="button">Lights off</button>
+  </nav>
 
   <header class="hero">
     <div>
@@ -224,7 +254,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     </figure>
   </header>
 
-  <section class="about" aria-labelledby="about-h">
+  <section class="about" id="about" aria-labelledby="about-h">
     <h2 id="about-h">About</h2>
     <div class="bio">
     <figure class="portrait">
@@ -237,15 +267,15 @@ footer .contact a{color:var(--ink);font-weight:500}
     </div>
   </section>
 
-  <section aria-labelledby="projects-h">
+  <section id="projects" aria-labelledby="projects-h">
     <h2 id="projects-h">Projects</h2>
 
     <article class="project">
       <div>
         <h3>Kestrova</h3>
         <p class="kind">Optical design and analysis software</p>
-        <p>A free, local optical design program in the spirit of Zemax and CODE V. You enter a lens prescription surface by surface; it traces real rays, computes Seidel aberrations, wavefront error and MTF, and runs tolerancing with compensators and Monte Carlo yield estimates.</p>
-        <p class="meta">In progress, version 0.3. <a href="https://github.com/br24563/Kestrova">Code on GitHub</a></p>
+        <p>A free, local-first optical design program that works the way Zemax and CODE V do. You enter a lens surface by surface; it traces exact rays, optimizes with constraints and global search, computes MTF, PSF and Seidel aberrations, and tolerances the design with compensators. It opens and saves Zemax and CODE V files and exports STEP and IGES for CAD. Every result is checked against an independent reference, such as a published design or a closed-form answer.</p>
+        <p class="meta">Version 0.4, with Windows and macOS installers. <a href="https://github.com/br24563/Kestrova">Code on GitHub</a> · <a href="https://github.com/br24563/Kestrova/releases">Download</a></p>
       </div>
       <figure class="rt">
         <svg id="rt-side" role="img" aria-label="Side view of rays traced through a cemented achromatic doublet to the image plane"></svg>
@@ -265,8 +295,8 @@ footer .contact a{color:var(--ink);font-weight:500}
       <div>
         <h3>GlassMatch</h3>
         <p class="kind">Optical glass selection database</p>
-        <p>About 2,900 optical materials from 18 sources in one searchable database. Search by index, Abbe number, transmission band and thermal expansion, find equivalent glasses across SCHOTT, OHARA, HOYA, CDGM and other makers, and trace every value back to its source.</p>
-        <p class="meta">In progress, open source. <a href="https://github.com/br24563/Glass-Match">Code on GitHub</a></p>
+        <p>2,959 optical materials from 18 source collections in one searchable database, with every value traced to its source. Match glasses against a requirement (wavelength band, index, Abbe number, transmission, dn/dT), find equivalents across SCHOTT, OHARA, HOYA, CDGM and other makers, and rank achromat and apochromat pairs. It can also load a Zemax or CODE V design and rank replacements for an obsolete glass.</p>
+        <p class="meta">Version 0.9, open source under the MIT license. <a href="https://github.com/br24563/Glass-Match">Code on GitHub</a></p>
       </div>
       <figure>
         <img src="assets/glassmatch-matching.webp" width="1110" height="695" loading="lazy" alt="GlassMatch matching page: requirement filters for wavelength band, index range and Abbe number range, with a ranked table of matching glasses from several manufacturers.">
@@ -292,7 +322,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     </article>
   </section>
 
-  <section aria-labelledby="pitch-h">
+  <section id="pitch" aria-labelledby="pitch-h">
     <h2 id="pitch-h">Pitch lab</h2>
     <div class="pitch">
       <div class="intro">
@@ -300,9 +330,13 @@ footer .contact a{color:var(--ink);font-weight:500}
       </div>
       <figure>
         <canvas id="pl-view" role="img" aria-label="Catcher's view of a simulated pitch crossing the strike zone. Click, drag, or use arrow keys to move where the pitch crosses the plate."></canvas>
-        <figcaption>Catcher's view of a right-handed pitcher, in slow motion. Click or drag anywhere in the view to move the pitch's location. The dashed circle is where the same throw would cross with no spin, so the gap between it and the ball is the spin-induced break.</figcaption>
+        <figcaption>Catcher's view of a <span id="pl-hand-txt">right-handed</span> pitcher, in slow motion. Click or drag anywhere in the view to move the pitch's location. The dashed circle is where the same throw would cross with no spin, so the gap between it and the ball is the spin-induced break.</figcaption>
       </figure>
       <div class="pl-controls">
+        <div class="presets hand" role="group" aria-label="Throwing hand">
+          <button class="chip" type="button" data-h="1" aria-pressed="true">Right-handed</button>
+          <button class="chip" type="button" data-h="-1" aria-pressed="false">Left-handed</button>
+        </div>
         <div class="presets" role="group" aria-label="Pitch type">
           <button class="chip" type="button" data-p="FF">Four-seam</button>
           <button class="chip" type="button" data-p="SI">Sinker</button>
@@ -322,7 +356,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     </div>
   </section>
 
-  <section aria-labelledby="exp-h">
+  <section id="experience" aria-labelledby="exp-h">
     <h2 id="exp-h">Experience</h2>
     <ul class="roles">
       <li><span class="role">Optical Systems Intern</span><span class="org">Optimax Systems, Ontario, NY</span><span class="when">Aug 2026 – present</span></li>
@@ -334,7 +368,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     </ul>
   </section>
 
-  <footer>
+  <footer id="contact">
     <div class="contact">
       <a href="mailto:brendan@moosepass.com">brendan@moosepass.com</a>
       <a href="https://github.com/br24563">github.com/br24563</a>
@@ -710,7 +744,9 @@ footer .contact a{color:var(--ink);font-weight:500}
   var ctx=cv.getContext('2d'), W=440, H=420;
   var inV=el('pl-velo'), inS=el('pl-spin'), inT=el('pl-tilt'), inE=el('pl-eff');
   var out=el('pl-out'), plot=el('pl-plot'), throwBtn=el('pl-throw'), centerBtn=el('pl-center');
-  var chips=[].slice.call(document.querySelectorAll('.presets .chip'));
+  var chips=[].slice.call(document.querySelectorAll('.presets [data-p]'));
+  var hands=[].slice.call(document.querySelectorAll('.presets [data-h]'));
+  var hand=1;   /* 1 right-handed, -1 left-handed: mirrors the release side, spin tilt and arm-side labels */
   var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* feet, seconds. K = air density x cross-section / (2 x mass); lift fit after Alan Nathan */
@@ -822,9 +858,9 @@ footer .contact a{color:var(--ink);font-weight:500}
       '<circle class="ring" cx="110" cy="110" r="48"/><circle class="ring" cx="110" cy="110" r="96"/>'+
       '<line class="cross" x1="110" y1="6" x2="110" y2="214"/><line class="cross" x1="6" y1="110" x2="214" y2="110"/>'+
       '<text class="bartxt" x="114" y="17">rise</text>'+
-      '<text class="bartxt" x="7" y="212">arm side</text><text class="bartxt" x="213" y="212" text-anchor="end">glove side</text>';
+      '<text class="bartxt" x="7" y="212">'+(hand>0?'arm':'glove')+' side</text><text class="bartxt" x="213" y="212" text-anchor="end">'+(hand>0?'glove':'arm')+' side</text>';
     Object.keys(refs).forEach(function(k){
-      var q=xy(refs[k][0],refs[k][1]);
+      var q=xy(refs[k][0]*hand,refs[k][1]);
       h+='<circle class="ref" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="3.5"/><text class="bartxt" x="'+(q[0]+(k==='CH'?-6:6)).toFixed(1)+'" y="'+(q[1]+(k==='CH'?10:k==='SI'?0:4)).toFixed(1)+'"'+(k==='CH'?' text-anchor="end"':'')+'>'+k+'</text>';
     });
     var p=xy(cur.hb,cur.ivb);
@@ -840,7 +876,7 @@ footer .contact a{color:var(--ink);font-weight:500}
     cur=compute(p);
     var iv=Math.round(Math.abs(cur.ivb)), hb=Math.round(Math.abs(cur.hb));
     out.textContent='Reaches the plate in '+cur.real.t.toFixed(2)+' s at '+Math.round(cur.real.v)+' mph. Spin moves it '+
-      iv+' in '+(cur.ivb>=0?'up':'down')+' and '+hb+' in to the '+(cur.hb<=0?'arm':'glove')+' side. '+
+      iv+' in '+(cur.ivb>=0?'up':'down')+' and '+hb+' in to the '+(cur.hb*hand<=0?'arm':'glove')+' side. '+
       (Math.abs(tgt[0])<=.708+RB && tgt[1]>=1.5-RB && tgt[1]<=3.5+RB ? 'Strike.' : 'Ball.');
     if(centerBtn) centerBtn.hidden=!tgt[0] && tgt[1]===ZC;
     drawPlot();
@@ -853,11 +889,21 @@ footer .contact a{color:var(--ink);font-weight:500}
   chips.forEach(function(c){
     c.addEventListener('click',function(){
       var k=c.getAttribute('data-p'), p=PRE[k];
-      inV.value=p.v; inS.value=p.s; inT.value=p.t; inE.value=p.e;
+      inV.value=p.v; inS.value=p.s; inT.value=hand>0?p.t:(48-p.t)%48; inE.value=p.e;
       mark(k); refresh(); animate();
     });
   });
   if(throwBtn) throwBtn.addEventListener('click',animate);
+  hands.forEach(function(b){
+    b.addEventListener('click',function(){
+      var h=+b.getAttribute('data-h'); if(h===hand) return;
+      hand=h; REL[0]=-1.5*hand;                       /* mirror the whole pitch */
+      inT.value=(48-inT.value)%48; tgt[0]=-tgt[0];
+      hands.forEach(function(x){ x.setAttribute('aria-pressed',x===b?'true':'false'); });
+      var txt=el('pl-hand-txt'); if(txt) txt.textContent=hand>0?'right-handed':'left-handed';
+      refresh(); animate();
+    });
+  });
 
   /* aiming: click or drag in the view, or arrow keys, to move where the pitch crosses the plate */
   function setTarget(x,z,play){
